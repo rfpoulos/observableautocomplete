@@ -1,5 +1,6 @@
 
 let searchBox = document.getElementById('search');
+let results = document.getElementById('results');
 
 var searchGithub = (term) =>
     fetch(`https://api.github.com/search/users?q=${term}`)
@@ -8,7 +9,14 @@ var searchGithub = (term) =>
 let keyup = Rx.Observable.fromEvent(searchBox, 'keyup')
     .debounce(500)
     .map(e => e.target.value)
-    .filter(value => !value | value.length > 2)
+    .filter(value => value.length > 2)
     .distinctUntilChanged()
     .flatMap(value => Rx.Observable.fromPromise(searchGithub(value)))
-    .subscribe(data => console.log(data))
+    .subscribe(data =>  {
+        results.innerHTML = '';
+        data.items.map(element => {
+            let newResult = document.createElement('li');
+            newResult.textContent = element.login;
+            results.appendChild(newResult);
+        })
+    })
