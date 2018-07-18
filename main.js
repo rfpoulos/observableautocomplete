@@ -17,7 +17,6 @@ let input$ = fromEvent(searchBox, 'input')
     )
     
 input$.subscribe(data =>  {
-        console.log(data)
         results.innerHTML = '';
         data.items.map(element => {
             let newResult = document.createElement('li');
