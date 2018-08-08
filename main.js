@@ -1,5 +1,12 @@
-const { from, fromEvent } = rxjs;
-const { map, filter, switchMap, debounceTime, distinctUntilChanged, startWith } = rxjs.operators;
+const { 
+    fromEvent, 
+} = rxjs;
+const { 
+    map, 
+    switchMap, 
+    debounceTime, 
+    distinctUntilChanged,  
+} = rxjs.operators;
 
 let searchBox = document.getElementById('search');
 let results = document.getElementById('results');
