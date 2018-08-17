@@ -19,16 +19,19 @@ let searchGithub = (term) =>
 
 let input$ = fromEvent(searchBox, 'input')
     .pipe(
+        debounceTime(350),
         map(e => e.target.value),
         filter(query => query.length >= 2 || query.length === 0), 
-        debounceTime(250),
         distinctUntilChanged(), 
         switchMap(value => value ?
-            from(searchGithub(value)) : from(Promise.resolve({items: []})))
+            from(searchGithub(value)) : from(Promise.resolve({items: []}))
+        )
     );
     
 input$.subscribe(data =>  {
-        results.innerHTML = '';
+        while (results.firstChild) {
+            results.removeChild(results.firstChild);
+        }
         data.items.map(element => {
             let newResult = document.createElement('li');
             newResult.textContent = element.login;
