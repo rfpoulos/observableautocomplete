@@ -1,11 +1,13 @@
 const { 
-    fromEvent, 
+    fromEvent,
+    from,
 } = rxjs;
 const { 
     map, 
     switchMap, 
     debounceTime, 
-    distinctUntilChanged,  
+    distinctUntilChanged,
+    filter,
 } = rxjs.operators;
 
 let searchBox = document.getElementById('search');
@@ -17,11 +19,13 @@ let searchGithub = (term) =>
 
 let input$ = fromEvent(searchBox, 'input')
     .pipe(
-        debounceTime(250),
         map(e => e.target.value),
-        distinctUntilChanged(),
-        switchMap(value => value ? searchGithub(value) : Promise.resolve({items: []}))
-    )
+        filter(query => query.length >= 2 || query.length === 0), 
+        debounceTime(250),
+        distinctUntilChanged(), 
+        switchMap(value => value ?
+            from(searchGithub(value)) : from(Promise.resolve({items: []})))
+    );
     
 input$.subscribe(data =>  {
         results.innerHTML = '';
