@@ -21,10 +21,12 @@ let input$ = fromEvent(searchBox, 'input')
     .pipe(
         debounceTime(350),
         map(e => e.target.value),
-        filter(query => query.length >= 2 || query.length === 0), 
+        filter(query => query.length >= 2 || 
+            query.length === 0), 
         distinctUntilChanged(), 
         switchMap(value => value ?
-            from(searchGithub(value)) : from(Promise.resolve({items: []}))
+            from(searchGithub(value)) : 
+            from(Promise.resolve({items: []}))
         )
     );
     
